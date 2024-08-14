@@ -3,7 +3,6 @@ import Image from 'next/image';
 import imageCancha from '../../../../../public/imagen-cancha.jpg';
 import { AiTwotoneSafetyCertificate, AiTwotoneStop } from 'react-icons/ai';
 import { Alert } from '@/app/ui/Alert/Alert';
-import { Erica_One } from 'next/font/google';
 
 const page = async ({ params }) => {
   const id = params.id;
