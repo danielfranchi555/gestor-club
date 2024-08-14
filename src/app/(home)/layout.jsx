@@ -1,5 +1,12 @@
+import Navbar from '../ui/NavBar/Navbar';
+
 const layout = ({ children }) => {
-  return <div>navbar{children}</div>;
+  return (
+    <div>
+      <Navbar />
+      {children}
+    </div>
+  );
 };
 
 export default layout;
