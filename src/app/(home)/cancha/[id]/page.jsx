@@ -1,12 +1,12 @@
-import { supabase } from '@/lib/supabase';
 import Image from 'next/image';
 import imageCancha from '../../../../../public/imagen-cancha.jpg';
 import { AiTwotoneSafetyCertificate, AiTwotoneStop } from 'react-icons/ai';
 import { Alert } from '@/app/ui/Alert/Alert';
+import { createSupabaseServerClient } from '@/utils/supabase/server';
 
 const page = async ({ params }) => {
   const id = params.id;
-
+  const supabase = createSupabaseServerClient();
   const { data, error } = await supabase
     .from('canchas')
     .select(
