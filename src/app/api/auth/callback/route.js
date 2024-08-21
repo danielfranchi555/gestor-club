@@ -5,16 +5,10 @@ import { NextResponse } from 'next/server';
 export async function GET(request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get('code');
-
   if (code) {
     const cookieStore = cookies();
-    const supabase = createRouteHandlerClient({
-      cookies: () => cookieStore,
-    });
+    const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
     await supabase.auth.exchangeCodeForSession(code);
-    console.log(code);
   }
-
-  // URL to redirect to after sign in process completes
-  return NextResponse.redirect(`http://localhost:3000`);
+  return NextResponse.redirect(requestUrl.origin);
 }

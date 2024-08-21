@@ -1,9 +1,9 @@
-import { NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
+import { NextResponse } from 'next/server';
 
-export async function middleware(req) {
+export async function middleware(request) {
   let supabaseResponse = NextResponse.next({
-    req,
+    request,
   });
 
   const supabase = createServerClient(
@@ -12,14 +12,14 @@ export async function middleware(req) {
     {
       cookies: {
         getAll() {
-          return req.cookies.getAll();
+          return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value, options }) =>
-            req.cookies.set(name, value),
+            request.cookies.set(name, value),
           );
           supabaseResponse = NextResponse.next({
-            req,
+            request,
           });
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options),
@@ -33,14 +33,9 @@ export async function middleware(req) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (
-    !user &&
-    !req.nextUrl.pathname.startsWith('/auth/signin') &&
-    !req.nextUrl.pathname.startsWith('/auth')
-  ) {
-    // no user, potentially respond by redirecting the user to the login page
-    const url = req.nextUrl.clone();
-    url.pathname = '/auth/signin';
+  if (!user && !request.nextUrl.pathname.startsWith('/auth/signin')) {
+    const url = request.nextUrl.clone();
+    url.pathname = 'auth/signin';
     return NextResponse.redirect(url);
   }
 
@@ -48,5 +43,5 @@ export async function middleware(req) {
 }
 
 export const config = {
-  matcher: ['/', '/cancha/:path*'],
+  matcher: ['/'],
 };

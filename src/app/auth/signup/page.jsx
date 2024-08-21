@@ -1,8 +1,8 @@
 'use client';
 import { createAccountAction } from '@/actions/users';
 import { Input } from '@/components/ui/input';
-import { ToastAction } from '@/components/ui/toast';
-import { useToast } from '@/components/ui/use-toast';
+// import { ToastAction } from '@/components/ui/toast';
+// import { useToast } from '@/components/ui/use-toast';
 import { Loader2 } from 'lucide-react';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
@@ -10,10 +10,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { schemaSignUp } from '../schema';
 import Link from 'next/link';
 import { Label } from '@/components/ui/label';
+// import { useRouter } from 'next/navigation';
 
 const page = () => {
   const [pending, setTransition] = useTransition();
+  const [submited, setSubmited] = useState(false);
+
   const [exist, setExist] = useState(null);
+  // const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -21,11 +25,11 @@ const page = () => {
     formState: { errors },
   } = useForm({ resolver: zodResolver(schemaSignUp) });
 
-  const { toast } = useToast();
+  // const { toast } = useToast();
 
   const handleSignUp = (formData) => {
     setTransition(async () => {
-      const { data, error } = await createAccountAction(formData);
+      const { error } = await createAccountAction(formData);
       if (error) {
         console.log(error);
         setExist(error);
@@ -33,16 +37,7 @@ const page = () => {
           setExist(null);
         }, 3000);
       } else {
-        toast({
-          title: 'Cuenta creada',
-          action: (
-            <ToastAction altText="Goto schedule to undo">
-              Verificar Email
-            </ToastAction>
-          ),
-        });
-        console.log(data);
-
+        setSubmited(true);
         reset();
       }
     });
@@ -96,7 +91,13 @@ const page = () => {
             className="bg-slate-800 text-white py-2 rounded-md flex items-center justify-center"
             disabled={pending}
           >
-            {pending ? <Loader2 className=" animate-spin" /> : 'Submit'}
+            {pending ? (
+              <Loader2 className=" animate-spin" />
+            ) : submited ? (
+              'Check email to continue sign in process'
+            ) : (
+              'Submit'
+            )}
           </button>
         </form>
         <div className="flex items-center w-full  justify-center gap-2 text-sm">

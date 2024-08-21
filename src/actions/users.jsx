@@ -1,5 +1,6 @@
 'use server';
 import { createSupabaseServerClient } from '@/utils/supabase/server';
+import { cookies } from 'next/headers';
 
 export async function createAccountAction(formData) {
   try {
@@ -8,7 +9,7 @@ export async function createAccountAction(formData) {
     const email = formData.email;
     const password = formData.password;
 
-    const { auth } = createSupabaseServerClient();
+    const { auth } = createSupabaseServerClient({ cookies });
 
     const { data, error } = await auth.signUp({ email, password });
 
@@ -33,7 +34,7 @@ export async function loginAction(formData) {
     const email = formData.email;
     const password = formData.password;
 
-    const { auth } = createSupabaseServerClient();
+    const { auth } = createSupabaseServerClient({ cookies });
     const { data, error } = await auth.signInWithPassword({
       email,
       password,
@@ -68,7 +69,7 @@ export async function loginAction(formData) {
 
 export async function signOut() {
   try {
-    const supabase = createSupabaseServerClient();
+    const supabase = createSupabaseServerClient({ cookies });
     const { data, error } = await supabase.auth.signOut();
     if (error) {
       return { data: null, error: error.message };
