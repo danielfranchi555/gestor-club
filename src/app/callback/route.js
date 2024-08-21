@@ -14,5 +14,5 @@ export async function GET(request) {
   }
 
   // URL to redirect to after sign in process completes
-  return NextResponse.redirect('https://gestor-club.vercel.app/');
+  return NextResponse.redirect(requestUrl.origin);
 }
