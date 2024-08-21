@@ -1,6 +1,7 @@
 'use server';
 import { createSupabaseServerClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
+
 export async function createAccountAction(formData) {
   try {
     // const name = formData.name;
@@ -14,7 +15,7 @@ export async function createAccountAction(formData) {
       email,
       password,
       options: {
-        emailRedirectTo: window.location.origin,
+        emailRedirectTo: process.env.NEXT_URL_PRODUCTION,
       },
     });
 
@@ -28,9 +29,9 @@ export async function createAccountAction(formData) {
         error: 'Email already exist.',
       };
     }
-    return { error: null };
+    return { data, error: null };
   } catch (error) {
-    console.log(error);
+    return { data: null, error: 'error al crear la cuenta' };
   }
 }
 
