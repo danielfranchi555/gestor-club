@@ -29,7 +29,7 @@ const page = () => {
 
   const handleSignUp = (formData) => {
     setTransition(async () => {
-      const { error } = await createAccountAction(formData);
+      const { error, origin } = await createAccountAction(formData);
       if (error) {
         console.log(error);
         setExist(error);
@@ -39,6 +39,7 @@ const page = () => {
       } else {
         setSubmited(true);
         reset();
+        console.log(origin);
       }
     });
   };

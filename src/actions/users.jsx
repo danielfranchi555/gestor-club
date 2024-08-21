@@ -1,6 +1,5 @@
-'use server';
-import { createSupabaseServerClient } from '@/utils/supabase/server';
-import { cookies } from 'next/headers';
+'use client';
+import { createSupabaseFrontendClient } from '@/utils/supabase/client';
 
 export async function createAccountAction(formData) {
   try {
@@ -9,13 +8,13 @@ export async function createAccountAction(formData) {
     const email = formData.email;
     const password = formData.password;
 
-    const { auth } = createSupabaseServerClient({ cookies });
+    const supabase = createSupabaseFrontendClient();
 
-    const { data, error } = await auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: process.env.NEXT_URL_PRODUCTION,
+        emailRedirectTo: window.location.origin,
       },
     });
 
@@ -29,7 +28,7 @@ export async function createAccountAction(formData) {
         error: 'Email already exist.',
       };
     }
-    return { data, error: null };
+    return { data, error: null, origin };
   } catch (error) {
     return { data: null, error: 'error al crear la cuenta' };
   }
@@ -40,7 +39,7 @@ export async function loginAction(formData) {
     const email = formData.email;
     const password = formData.password;
 
-    const { auth } = createSupabaseServerClient({ cookies });
+    const { auth } = createSupabaseFrontendClient();
     const { data, error } = await auth.signInWithPassword({
       email,
       password,
@@ -75,12 +74,14 @@ export async function loginAction(formData) {
 
 export async function signOut() {
   try {
-    const supabase = createSupabaseServerClient({ cookies });
+    const supabase = createSupabaseFrontendClient();
     const { data, error } = await supabase.auth.signOut();
     if (error) {
       return { data: null, error: error.message };
     }
 
     return { data, error: null };
-  } catch (error) {}
+  } catch (error) {
+    return { data: null, error };
+  }
 }
