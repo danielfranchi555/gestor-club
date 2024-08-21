@@ -10,14 +10,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { schemaSignUp } from '../schema';
 import Link from 'next/link';
 import { Label } from '@/components/ui/label';
-// import { useRouter } from 'next/navigation';
 
 const page = () => {
   const [pending, setTransition] = useTransition();
   const [submited, setSubmited] = useState(false);
 
   const [exist, setExist] = useState(null);
-  // const router = useRouter();
   const {
     register,
     handleSubmit,

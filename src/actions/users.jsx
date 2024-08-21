@@ -14,7 +14,7 @@ export async function createAccountAction(formData) {
       email,
       password,
       options: {
-        emailRedirectTo: window.location.origin,
+        emailRedirectTo: `${location.origin}/callback`,
       },
     });
 
@@ -68,7 +68,7 @@ export async function loginAction(formData) {
 
     return { data, error: null };
   } catch (error) {
-    console.log(error);
+    return { data: null, error: error.message };
   }
 }
 

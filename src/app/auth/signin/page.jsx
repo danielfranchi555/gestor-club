@@ -2,7 +2,6 @@
 import { loginAction } from '@/actions/users';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useToast } from '@/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
@@ -15,7 +14,6 @@ const page = () => {
   const [pending, setTransition] = useTransition();
   const [error, setError] = useState(null);
   const router = useRouter();
-  const { toast } = useToast();
   const {
     register,
     handleSubmit,
@@ -25,14 +23,11 @@ const page = () => {
   const handleSignIn = async (formData) => {
     setTransition(async () => {
       const { error } = await loginAction(formData);
-
       if (error) {
         setError(error);
+        console.log(error);
       } else {
-        router.push('/');
-        toast({
-          title: 'Login Succesful',
-        });
+        router.refresh();
       }
     });
   };

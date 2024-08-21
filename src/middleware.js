@@ -7,19 +7,12 @@ export async function middleware(req) {
   const {
     data: { session },
   } = await supabase.auth.getSession();
-  const { pathname } = req.nextUrl;
 
-  if (!session && pathname !== '/auth/signin') {
-    return NextResponse.redirect(new URL('/auth/signin', req.url));
+  if (!session) {
+    return NextResponse.rewrite(new URL('/auth/signin', req.url));
   }
-
-  if (session && pathname === '/auth/signin') {
-    return NextResponse.redirect(new URL('/', req.url));
-  }
-
-  return res;
 }
 
 export const config = {
-  matcher: ['/cancha/:path*', '/auth/signin', '/'],
+  matcher: ['/'],
 };

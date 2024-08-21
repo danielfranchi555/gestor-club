@@ -18,7 +18,6 @@ export function DropdownMenuDemo() {
 
   const closeSession = async () => {
     setTransition(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
       const { data, error } = await signOut();
       if (error) {
         console.log(error);
