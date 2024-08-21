@@ -1,7 +1,6 @@
 'use server';
 import { createSupabaseServerClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
-
 export async function createAccountAction(formData) {
   try {
     // const name = formData.name;
@@ -11,7 +10,13 @@ export async function createAccountAction(formData) {
 
     const { auth } = createSupabaseServerClient({ cookies });
 
-    const { data, error } = await auth.signUp({ email, password });
+    const { data, error } = await auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: window.location.origin,
+      },
+    });
 
     if (error) {
       return { data: null, error: error.message };
@@ -23,7 +28,7 @@ export async function createAccountAction(formData) {
         error: 'Email already exist.',
       };
     }
-    return { data, error: null };
+    return { error: null };
   } catch (error) {
     console.log(error);
   }
