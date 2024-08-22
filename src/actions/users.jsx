@@ -14,7 +14,7 @@ export async function createAccountAction(formData) {
       email,
       password,
       options: {
-        emailRedirectTo: `${location.origin}/callback`,
+        emailRedirectTo: `${process.env.NODE_ENV === 'production' ? `${process.env.PRODUCTION_URL}/callback` : 'http://localhost:3000/callback'}`,
       },
     });
 
