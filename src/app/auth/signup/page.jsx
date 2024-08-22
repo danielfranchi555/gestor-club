@@ -24,10 +24,9 @@ const page = () => {
   } = useForm({ resolver: zodResolver(schemaSignUp) });
 
   // const { toast } = useToast();
-
   const handleSignUp = (formData) => {
     setTransition(async () => {
-      const { error, origin } = await createAccountAction(formData);
+      const { error } = await createAccountAction(formData);
       if (error) {
         console.log(error);
         setExist(error);
@@ -37,7 +36,6 @@ const page = () => {
       } else {
         setSubmited(true);
         reset();
-        console.log(origin);
       }
     });
   };

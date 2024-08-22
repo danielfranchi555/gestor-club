@@ -3,6 +3,7 @@ import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 
 export async function middleware(req) {
   const res = NextResponse.next();
+
   const supabase = createMiddlewareClient({ req, res });
   const {
     data: { session },
@@ -11,6 +12,8 @@ export async function middleware(req) {
   if (!session) {
     return NextResponse.rewrite(new URL('/auth/signin', req.url));
   }
+
+  return res;
 }
 
 export const config = {

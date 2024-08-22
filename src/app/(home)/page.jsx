@@ -1,4 +1,4 @@
-import CardCancha from '../ui/CardCancha/CardCancha';
+import Card from '../ui/Card/Card';
 import { createSupabaseFrontendClient } from '@/utils/supabase/client';
 
 const page = async () => {
@@ -10,11 +10,10 @@ const page = async () => {
 
   return (
     <main>
-      Canchas:
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 container">
         {data?.map((item) => (
           <div key={item}>
-            <CardCancha item={item} />
+            <Card data={item} />
           </div>
         ))}
       </div>

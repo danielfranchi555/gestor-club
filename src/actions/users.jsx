@@ -1,6 +1,4 @@
-'use client';
 import { createSupabaseFrontendClient } from '@/utils/supabase/client';
-
 export async function createAccountAction(formData) {
   try {
     // const name = formData.name;
@@ -14,7 +12,7 @@ export async function createAccountAction(formData) {
       email,
       password,
       options: {
-        emailRedirectTo: `${process.env.NODE_ENV === 'production' ? `${process.env.PRODUCTION_URL}/callback` : 'http://localhost:3000/callback'}`,
+        emailRedirectTo: `${window.location.origin}/callback`,
       },
     });
 
@@ -85,3 +83,18 @@ export async function signOut() {
     return { data: null, error };
   }
 }
+
+export const getUser = async () => {
+  try {
+    const supabase = createSupabaseFrontendClient();
+    const { data, error } = await supabase.auth.getUser();
+
+    if (error) {
+      return { data: null, error: error.message };
+    }
+
+    return { data, error: null };
+  } catch (error) {
+    return { error };
+  }
+};

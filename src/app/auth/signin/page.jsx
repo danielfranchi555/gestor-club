@@ -27,6 +27,7 @@ const page = () => {
         setError(error);
         console.log(error);
       } else {
+        router.push('/');
         router.refresh();
       }
     });
