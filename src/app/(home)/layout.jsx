@@ -1,10 +1,13 @@
+import ReservationContext from '../context/ReservationContext';
 import Navbar from '../ui/NavBar/Navbar';
 
 const layout = ({ children }) => {
   return (
     <div>
-      <Navbar />
-      {children}
+      <ReservationContext>
+        <Navbar />
+        {children}
+      </ReservationContext>
     </div>
   );
 };

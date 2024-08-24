@@ -2,9 +2,8 @@ import Image from 'next/image';
 import canchaimg from '../../../../public/imagen-cancha.jpg';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-const Card = ({ data }) => {
-  console.log({ data });
 
+const Card = ({ data }) => {
   return (
     <div className="relative w-full">
       <div className="relative">

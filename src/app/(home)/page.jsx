@@ -1,12 +1,9 @@
+import { getCanchas } from '@/actions/data';
 import Card from '../ui/Card/Card';
-import { createSupabaseFrontendClient } from '@/utils/supabase/client';
 
 const page = async () => {
-  const supabase = createSupabaseFrontendClient();
-  const { data, error } = await supabase.from('canchas').select();
-  if (error) {
-    console.log({ frompage: error });
-  }
+  const { data, error } = await getCanchas();
+  if (error) throw error;
 
   return (
     <main>
