@@ -95,6 +95,6 @@ export const getUser = async () => {
 
     return { data, error: null };
   } catch (error) {
-    return { error };
+    return { message: error };
   }
 };

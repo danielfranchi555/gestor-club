@@ -17,6 +17,7 @@ const Navbar = () => {
   const toggle = () => {
     setOpen(!open);
   };
+
   const getInfoUser = async () => {
     setTransition(async () => {
       const user = await getUser();
