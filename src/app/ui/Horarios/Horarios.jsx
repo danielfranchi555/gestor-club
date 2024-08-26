@@ -6,14 +6,21 @@ import { createSupabaseFrontendClient } from '@/utils/supabase/client';
 import { useContext, useEffect, useTransition } from 'react';
 
 const Horarios = () => {
-  const { horarios, selected, setSelected, setHorarios } =
-    useContext(ContextReservation);
+  const {
+    selected,
+    setSelected,
+    setHorarios,
+    filteredHorarios,
+    horarios,
+    date,
+  } = useContext(ContextReservation);
   const [pending, setTransition] = useTransition();
 
   const supabase = createSupabaseFrontendClient();
 
   useEffect(() => {
     setTransition(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       try {
         const { data, error } = await supabase.from('horarios').select();
         if (error) return { data: null, error: error.message };
@@ -23,23 +30,28 @@ const Horarios = () => {
         return { message: error };
       }
     });
-  }, []);
+  }, [date]);
 
   const handleHour = (id) => {
     setSelected(id);
     console.log('Horario seleccionado:', id); // Debe mostrar el ID seleccionado
   };
 
+  const horariosFilter =
+    filteredHorarios.length > 0 ? filteredHorarios : horarios;
+
+  console.log(horariosFilter);
+
   return (
     <ScrollArea className="h-72 w-full md:w-full  rounded-md border">
       <div className="p-4">
         <h4 className="mb-4 text-sm font-medium leading-none text-center  ">
-          Horarios
+          Horarios Disponibles
         </h4>
         {pending ? (
           <SkeletonHorarios />
         ) : (
-          horarios?.map((hour) => (
+          horariosFilter?.map((hour) => (
             <div key={hour.id}>
               <div
                 onClick={() => handleHour(hour.id)}

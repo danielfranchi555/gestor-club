@@ -17,15 +17,22 @@ const Calendario = () => {
     error,
   } = useContext(ContextReservation);
 
+  const today = new Date();
+  const oneWeekFromToday = new Date(today);
+  oneWeekFromToday.setDate(today.getDate() + 30);
+
   return (
     <div className="flex flex-col lg:flex lg:flex-col gap-5  w-full ">
       <section className="flex flex-col lg:grid lg:grid-cols-3 gap-6">
-        <div className="col-span-2">
+        <div className="col-span-2 w-full ">
           <Calendar
             mode="single"
             selected={date}
             onSelect={setDate}
-            className="rounded-md border shadow w-full  "
+            disabled={1}
+            fromDate={new Date()} // Deshabilita las fechas anteriores de la fecha actual
+            toDate={oneWeekFromToday}
+            className="rounded-md border shadow w-full   "
           />
           <span>
             fecha seleccionada: {date ? date.toISOString().split('T')[0] : ''}

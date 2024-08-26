@@ -5,7 +5,6 @@ const page = async ({ params }) => {
   const id = params.id;
 
   const { data, error } = await getCancha(id);
-
   if (error) throw error;
 
   return (
