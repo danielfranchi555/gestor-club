@@ -51,7 +51,8 @@ const ReservationContext = ({ children }) => {
         const { data: reservasData, error: reservasError } = await supabase
           .from('reservas')
           .select('id_horario')
-          .eq('reserva_fecha', formattedDate);
+          .eq('reserva_fecha', formattedDate)
+          .eq('id_cancha', id);
         if (reservasError) throw new Error(reservasError.message);
 
         console.log({ reservas: reservasData });
