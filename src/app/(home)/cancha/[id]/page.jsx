@@ -8,7 +8,7 @@ const page = async ({ params }) => {
   if (error) throw error;
 
   return (
-    <div className="w-[95%] mx-auto ">
+    <div className="w-[95%] mx-auto  ">
       <CanchaDetail data={data} />
     </div>
   );

@@ -1,7 +1,9 @@
-import { createSupabaseClient } from '@/utils/supabase/server';
-
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 export async function getCanchas() {
-  const supabase = createSupabaseClient();
+  const cookieStore = cookies();
+
+  const supabase = createServerComponentClient({ cookies: () => cookieStore });
   try {
     const { data, error } = await supabase.from('canchas').select();
     if (error) {
@@ -15,7 +17,9 @@ export async function getCanchas() {
 }
 
 export async function getCancha(id) {
-  const supabase = createSupabaseClient();
+  const cookieStore = cookies();
+
+  const supabase = createServerComponentClient({ cookies: () => cookieStore });
   try {
     const { data, error } = await supabase
       .from('canchas')

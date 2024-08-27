@@ -3,6 +3,7 @@ import Card from '../ui/Card/Card';
 
 const page = async () => {
   const { data, error } = await getCanchas();
+
   if (error) throw error;
 
   return (

@@ -5,7 +5,7 @@ import Calendario from '../Calendario/Calendario';
 
 const CanchaDetail = ({ data }) => {
   return (
-    <div className="grid grid-cols-1 lg:grid lg:grid-cols-2  w-full ">
+    <div className="grid grid-cols-1 lg:grid lg:grid-cols-2  gap-2 w-full ">
       <Image
         src={imagecancha}
         width={800}
@@ -13,7 +13,7 @@ const CanchaDetail = ({ data }) => {
         alt="img-cancha"
         className="col-span-1 rounded-md shadow-md w-full"
       />
-      <section className="flex flex-col gap-1 px-4">
+      <section className="flex flex-col gap-1 justify-between ">
         <p className="font-bold text-2xl">{data[0].name}</p>
         <div className="flex items-center gap-2">
           <span className="font-light text-sm py-1 flex items-center gap-1 bg-slate-100 px-2 rounded-md">
@@ -36,6 +36,9 @@ const CanchaDetail = ({ data }) => {
             Surface: {data[0].surface_type}
           </span>
         </div>
+        <span className="font-bold">
+          Precio: <span className="font-light">${data[0].price}</span>{' '}
+        </span>
         <div className="flex justify-between ">
           <Calendario data={data} />
         </div>

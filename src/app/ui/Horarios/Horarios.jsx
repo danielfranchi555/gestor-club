@@ -2,45 +2,25 @@ import { ContextReservation } from '@/app/context/ReservationContext';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import SkeletonHorarios from '@/skeleton/Horarios';
-import { createSupabaseFrontendClient } from '@/utils/supabase/client';
-import { useContext, useEffect, useTransition } from 'react';
+import { useContext, useEffect } from 'react';
 
 const Horarios = () => {
   const {
     selected,
     setSelected,
-    setHorarios,
-    filteredHorarios,
+    getHorariosReservados,
     horarios,
-    date,
+    pendingHorarios,
   } = useContext(ContextReservation);
-  const [pending, setTransition] = useTransition();
-
-  const supabase = createSupabaseFrontendClient();
 
   useEffect(() => {
-    setTransition(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      try {
-        const { data, error } = await supabase.from('horarios').select();
-        if (error) return { data: null, error: error.message };
-
-        setHorarios(data);
-      } catch (error) {
-        return { message: error };
-      }
-    });
-  }, [date]);
+    getHorariosReservados();
+  }, []);
 
   const handleHour = (id) => {
     setSelected(id);
     console.log('Horario seleccionado:', id); // Debe mostrar el ID seleccionado
   };
-
-  const horariosFilter =
-    filteredHorarios.length > 0 ? filteredHorarios : horarios;
-
-  console.log(horariosFilter);
 
   return (
     <ScrollArea className="h-72 w-full md:w-full  rounded-md border">
@@ -48,14 +28,14 @@ const Horarios = () => {
         <h4 className="mb-4 text-sm font-medium leading-none text-center  ">
           Horarios Disponibles
         </h4>
-        {pending ? (
+        {pendingHorarios ? (
           <SkeletonHorarios />
         ) : (
-          horariosFilter?.map((hour) => (
+          horarios?.map((hour) => (
             <div key={hour.id}>
               <div
                 onClick={() => handleHour(hour.id)}
-                className={`text-sm flex justify-between gap-2 cursor-pointer py-2 rounded-md px-2 transition-all hover:bg-gray-100 hover:shadow-xs hover:text-black ${selected === hour.id && 'bg-slate-800  text-white'}`}
+                className={`text-sm flex justify-between gap-2 cursor-pointer py-2 rounded-md px-2 hover:shadow-xs  ${selected === hour.id && 'bg-blue-700  text-white'}`}
               >
                 <span>{hour.horario_inicio}</span>
                 <span>-</span>

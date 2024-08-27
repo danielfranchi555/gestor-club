@@ -1,21 +1,22 @@
 'use client';
 import { getUser } from '@/actions/users';
+import { useToast } from '@/components/ui/use-toast';
 import { createSupabaseFrontendClient } from '@/utils/supabase/client';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { createContext, useEffect, useState, useTransition } from 'react';
 export const ContextReservation = createContext();
 
 const ReservationContext = ({ children }) => {
   const [date, setDate] = useState(new Date());
   const [horarios, setHorarios] = useState([]);
-  const [filteredHorarios, setFilteredHorarios] = useState([]); // Almacena los horarios filtrados por fecha
+  // const [filteredHorarios, setFilteredHorarios] = useState([]); // Almacena los horarios filtrados por fecha
   const [selected, setSelected] = useState(null);
   const [error, setError] = useState('');
   const [pendingReservation, setTransitionReservation] = useTransition();
+  const [pendingHorarios, setTransitionHorarios] = useTransition();
   const supabase = createSupabaseFrontendClient();
   const [idUser, setIdUser] = useState(null);
-
-  const router = useRouter();
+  const { toast } = useToast();
 
   // obtenemos el id de la cancha
   const { id } = useParams();
@@ -31,45 +32,61 @@ const ReservationContext = ({ children }) => {
     getInfoUser();
   }, []);
 
-  // fetching de horarios por fecha
-  useEffect(() => {
-    const fetchHorariosReservados = async () => {
+  const getHorariosReservados = async () => {
+    setTransitionHorarios(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       try {
-        // obtener las reservas que coincida con la fecha y el id de la cancha que le pasamos
-        const { data: reservas, error: errorReservas } = await supabase
+        // Obtener todos los horarios
+        const { data: horariosData, error: horariosError } = await supabase
+          .from('horarios')
+          .select();
+
+        if (horariosError) throw new Error(horariosError.message);
+
+        // Formatear la fecha a 'YYYY-MM-DD'
+        const formattedDate = new Date(date).toISOString().split('T')[0];
+
+        // Obtener las reservas para la fecha seleccionada
+        const { data: reservasData, error: reservasError } = await supabase
           .from('reservas')
-          .select()
-          .eq('reserva_fecha', date.toISOString().split('T')[0])
-          .eq('id_cancha', id);
+          .select('id_horario')
+          .eq('reserva_fecha', formattedDate);
+        if (reservasError) throw new Error(reservasError.message);
 
-        if (errorReservas) {
-          return { data: null, error: error.message };
-        }
+        console.log({ reservas: reservasData });
 
-        console.log(reservas);
+        // Asegurarse de que horario_id solo contenga valores válidos
 
-        const idHorariosReservas = reservas.map((item) => item.id_horario);
+        const reservedIds = reservasData
+          .map((reserva) => reserva.id_horario)
+          .filter((id) => id !== null && id !== ''); // Filtra IDs inválidos
 
-        const horariosDisponibles = horarios.filter(
-          (horario) => !idHorariosReservas.includes(horario.id),
+        console.log(reservedIds);
+
+        // Filtrar los horarios no reservados en el frontend
+        const filteredHorarios = horariosData.filter(
+          (horario) => !reservedIds.includes(horario.id),
         );
 
-        // Actualizar el estado con los horarios disponibles
-        setFilteredHorarios(horariosDisponibles);
+        // Setear los horarios filtrados
+        setHorarios(filteredHorarios);
       } catch (error) {
-        console.error('Error al obtener horarios disponibles:', error);
+        console.error('Error al obtener horarios o reservas:', error.message);
       }
-    };
+    });
+  };
 
-    fetchHorariosReservados();
+  useEffect(() => {
+    getHorariosReservados();
   }, [date]);
 
-  const handleReservation = async (selected, date) => {
+  const handleReservation = async (selected, date, price) => {
     setTransitionReservation(async () => {
       try {
-        if (!selected || !date || !idUser || !id) {
-          setError('no se recibio un horario');
-          return { message: 'No se recibio horario o date' };
+        if (!selected || !date || !idUser || !id || !price) {
+          setError('No has seleccionado una fecha u horario');
+          return { message: 'Selecciona un horario y fecha correcta' };
         }
 
         const reservation = {
@@ -77,6 +94,7 @@ const ReservationContext = ({ children }) => {
           reserva_fecha: date.toISOString().split('T')[0],
           id_usuario: idUser && idUser,
           id_cancha: id,
+          price: price,
         };
 
         // antes de insertar verificar que no haya una reserva a la misma hora el mismo dia
@@ -89,7 +107,11 @@ const ReservationContext = ({ children }) => {
           return { data: null, error: error.message };
         }
 
-        router.refresh();
+        toast({
+          title: 'Reserva Exitosa!',
+          description: 'Friday, February 10, 2023 at 5:57 PM',
+        });
+        getHorariosReservados();
         return { data, error: null };
       } catch (error) {
         return { message: error };
@@ -109,7 +131,8 @@ const ReservationContext = ({ children }) => {
         setHorarios,
         pendingReservation,
         error,
-        filteredHorarios,
+        getHorariosReservados,
+        pendingHorarios,
       }}
     >
       {children}
