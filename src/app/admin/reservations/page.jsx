@@ -6,7 +6,6 @@ const page = async () => {
   const cookieStore = cookies();
 
   const supabase = createServerComponentClient({ cookies: () => cookieStore });
-
   const { data, error } = await supabase.from('reservas').select();
 
   if (error) return console.log(error);

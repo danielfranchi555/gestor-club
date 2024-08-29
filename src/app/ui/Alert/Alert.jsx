@@ -1,4 +1,5 @@
-"use client";
+'use client';
+import { ContextReservation } from '@/app/context/ReservationContext';
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -8,38 +9,51 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
+import { useContext } from 'react';
 
-export function Alert({ fecha, data }) {
-  // QUERY INSERT DATA "RESERVAS"
+export function Alert({ price }) {
+  const { date, pendingReservation, handleReservation, selected, error } =
+    useContext(ContextReservation);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // const object = {
-    //   id_horario: 1,
-    //   horario_inicio: data.horario_inicio,
-    //   horario_final: data.horario_final,
-    //   fecha: fecha,
-    // };
+  // objeto para formatear la fecha
+  const options = {
+    day: 'numeric', // Día del mes
+    month: 'long', // Mes completo
+    year: 'numeric', // Año completo
   };
 
   return (
     <AlertDialog>
+      {error && <p>{error}</p>}
       <AlertDialogTrigger asChild>
-        <Button variant="outline">Reservar</Button>
+        <Button variant="outline" disabled={!selected.id}>
+          Continuar{' '}
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            Reservar el turno de 08 a 09 am el dia {fecha}?
+            Estas seguro que deseas reservar el turno de{' '}
+            {date?.toLocaleDateString('es-ES', options)} a las{' '}
+            {selected?.horarioInicial}?
           </AlertDialogTitle>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <form onSubmit={handleSubmit}>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction type="submit">Continue</AlertDialogAction>
-          </form>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          {/* funcion handleReservation */}
+          <AlertDialogAction
+            type="submit"
+            onClick={() => handleReservation(selected, date, price)}
+          >
+            {pendingReservation ? (
+              <Loader2 className="animate-spin" />
+            ) : (
+              ' Reservar'
+            )}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

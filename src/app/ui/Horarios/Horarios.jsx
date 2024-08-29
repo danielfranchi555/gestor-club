@@ -2,24 +2,41 @@ import { ContextReservation } from '@/app/context/ReservationContext';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import SkeletonHorarios from '@/skeleton/Horarios';
+import { createSupabaseFrontendClient } from '@/utils/supabase/client';
 import { useContext, useEffect } from 'react';
 
 const Horarios = () => {
   const {
     selected,
     setSelected,
-    getHorariosReservados,
+    getHorariosReservadosPorFecha,
     horarios,
     pendingHorarios,
   } = useContext(ContextReservation);
+  const supabase = createSupabaseFrontendClient();
 
   useEffect(() => {
-    getHorariosReservados();
+    getHorariosReservadosPorFecha();
+    const subscription = supabase
+      .channel('reservas')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'reservas' },
+        (payload) => {
+          console.log('Nueva reserva:', payload);
+          getHorariosReservadosPorFecha(); // Actualizar los horarios cuando se detecta una nueva reserva
+        },
+      )
+      .subscribe();
+
+    return () => {
+      subscription.unsubscribe(); // Limpiar la suscripción cuando el componente se desmonte
+    };
   }, []);
 
-  const handleHour = (id) => {
-    setSelected(id);
-    console.log('Horario seleccionado:', id); // Debe mostrar el ID seleccionado
+  const handleHour = (id, horario) => {
+    const formatedHour = horario.slice(0, -3);
+    setSelected({ id: id, horarioInicial: formatedHour });
   };
 
   return (
@@ -34,8 +51,8 @@ const Horarios = () => {
           horarios?.map((hour) => (
             <div key={hour.id}>
               <div
-                onClick={() => handleHour(hour.id)}
-                className={`text-sm flex justify-between gap-2 cursor-pointer py-2 rounded-md px-2 hover:shadow-xs  ${selected === hour.id && 'bg-blue-700  text-white'}`}
+                onClick={() => handleHour(hour.id, hour.horario_inicio)}
+                className={`text-sm flex justify-between gap-2 cursor-pointer py-2 rounded-md px-2 hover:shadow-xs ${selected.id && selected.id === hour.id ? 'bg-blue-700  text-white' : ''}`}
               >
                 <span>{hour.horario_inicio}</span>
                 <span>-</span>

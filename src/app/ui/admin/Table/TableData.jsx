@@ -48,6 +48,9 @@ const TableData = ({ reservations }) => {
             Id Horario
           </TableHead>
           <TableHead className="text-center md:text-right">Precio</TableHead>
+          <TableHead className="text-center md:text-right">
+            Estado del Pago
+          </TableHead>
           <TableHead className="text-center md:text-right">Detalle</TableHead>
         </TableRow>
       </TableHeader>
@@ -63,6 +66,9 @@ const TableData = ({ reservations }) => {
             </TableCell>
             <TableCell className="text-center md:text-right">
               ${res.price}
+            </TableCell>
+            <TableCell className="text-center md:text-right">
+              {res.estado_pago}
             </TableCell>
             <TableCell className="text-center md:text-right">
               <button className="bg-blue-700 text-white px-2 py-1 rounded-md">

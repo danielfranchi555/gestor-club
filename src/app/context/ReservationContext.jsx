@@ -7,32 +7,33 @@ import { createContext, useEffect, useState, useTransition } from 'react';
 export const ContextReservation = createContext();
 
 const ReservationContext = ({ children }) => {
+  // Client supabase
+  const supabase = createSupabaseFrontendClient();
+  // States
   const [date, setDate] = useState(new Date());
   const [horarios, setHorarios] = useState([]);
-  // const [filteredHorarios, setFilteredHorarios] = useState([]); // Almacena los horarios filtrados por fecha
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState({ id: null, horarioInicial: '' });
   const [error, setError] = useState('');
+  const [idUser, setIdUser] = useState(null);
+  // Transitions
   const [pendingReservation, setTransitionReservation] = useTransition();
   const [pendingHorarios, setTransitionHorarios] = useTransition();
-  const supabase = createSupabaseFrontendClient();
-  const [idUser, setIdUser] = useState(null);
   const { toast } = useToast();
-
-  // obtenemos el id de la cancha
+  // Id de la cancha
   const { id } = useParams();
 
   // obtenemos la info del user
   const getInfoUser = async () => {
     const { data, error } = await getUser();
     if (error) console.log(error);
-    setIdUser(data.user.id);
+    setIdUser(data?.user?.id);
   };
 
   useEffect(() => {
     getInfoUser();
   }, []);
 
-  const getHorariosReservados = async () => {
+  const getHorariosReservadosPorFecha = async () => {
     setTransitionHorarios(async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -53,9 +54,8 @@ const ReservationContext = ({ children }) => {
           .select('id_horario')
           .eq('reserva_fecha', formattedDate)
           .eq('id_cancha', id);
-        if (reservasError) throw new Error(reservasError.message);
 
-        console.log({ reservas: reservasData });
+        if (reservasError) throw new Error(reservasError.message);
 
         // Asegurarse de que horario_id solo contenga valores válidos
 
@@ -79,19 +79,35 @@ const ReservationContext = ({ children }) => {
   };
 
   useEffect(() => {
-    getHorariosReservados();
+    getHorariosReservadosPorFecha();
+    // Suscribirse a los cambios en tiempo real en la tabla de reservas
+    const subscription = supabase
+      .channel('reservas')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'reservas' },
+        (payload) => {
+          console.log('Nueva reserva:', payload);
+          getHorariosReservadosPorFecha(); // Actualizar los horarios cuando se detecta una nueva reserva
+        },
+      )
+      .subscribe();
+
+    return () => {
+      subscription.unsubscribe(); // Limpiar la suscripción cuando el componente se desmonte
+    };
   }, [date]);
 
   const handleReservation = async (selected, date, price) => {
     setTransitionReservation(async () => {
       try {
-        if (!selected || !date || !idUser || !id || !price) {
-          setError('No has seleccionado una fecha u horario');
-          return { message: 'Selecciona un horario y fecha correcta' };
+        if (!selected.id || !date || !idUser || !id || !price) {
+          setError('Ocurrio un error intenta nuevamente');
+          return { message: 'Ocurrio un error intenta nuevamente' };
         }
-
+        // crear el objeto listo para mandar a la db
         const reservation = {
-          id_horario: selected,
+          id_horario: selected.id,
           reserva_fecha: date.toISOString().split('T')[0],
           id_usuario: idUser && idUser,
           id_cancha: id,
@@ -112,7 +128,7 @@ const ReservationContext = ({ children }) => {
           title: 'Reserva Exitosa!',
           description: 'Friday, February 10, 2023 at 5:57 PM',
         });
-        getHorariosReservados();
+        setSelected({ id: null, horarioInicial: '' });
         return { data, error: null };
       } catch (error) {
         return { message: error };
@@ -132,7 +148,7 @@ const ReservationContext = ({ children }) => {
         setHorarios,
         pendingReservation,
         error,
-        getHorariosReservados,
+        getHorariosReservadosPorFecha,
         pendingHorarios,
       }}
     >

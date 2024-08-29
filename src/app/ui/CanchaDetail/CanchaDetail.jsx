@@ -5,13 +5,13 @@ import Calendario from '../Calendario/Calendario';
 
 const CanchaDetail = ({ data }) => {
   return (
-    <div className="grid grid-cols-1 lg:grid lg:grid-cols-2  gap-2 w-full ">
+    <div className="grid grid-cols-1 lg:grid lg:grid-cols-2  gap-2 w-full  ">
       <Image
         src={imagecancha}
         width={800}
         height={100}
         alt="img-cancha"
-        className="col-span-1 rounded-md shadow-md w-full"
+        className="col-span-1 rounded-md shadow-md w-full h-full"
       />
       <section className="flex flex-col gap-1 justify-between ">
         <p className="font-bold text-2xl">{data[0].name}</p>
