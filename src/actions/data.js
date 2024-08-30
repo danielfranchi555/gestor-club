@@ -61,13 +61,19 @@ export async function getCancha(id) {
 
 export async function getReservaFromIdUser(idUsuario) {
   const cookieStore = cookies();
-
   const supabase = createServerComponentClient({ cookies: () => cookieStore });
 
   try {
     const { data: reservas, error: errorReserva } = await supabase
       .from('reservas')
-      .select()
+      .select(
+        `
+        *,
+        horarios (
+          *
+        )
+      `,
+      )
       .eq('id_usuario', idUsuario);
 
     if (errorReserva) {

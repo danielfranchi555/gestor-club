@@ -9,6 +9,8 @@ const Header = async () => {
     console.log(error);
   }
 
+  console.log(user);
+
   return (
     <div className="flex items-center justify-between py-4 md:py-2 px-5 mb-10 shadow-md">
       <div className="flex items-center gap-4">
@@ -21,9 +23,15 @@ const Header = async () => {
             className="rounded-full w-[40px]"
           />
         </Link>
-        <span className="text-sm">{user?.email}</span>
+        <span className="text-sm md:text-md ">
+          <span>Bienvenido</span> {''}
+          <span className="font-bold">
+            {user?.user_metadata.username[0].toUpperCase() +
+              user?.user_metadata.username?.slice(1)}
+          </span>
+        </span>
       </div>
-      <Navbar user={user} />
+      <Navbar user={user?.user_metadata} />
     </div>
   );
 };

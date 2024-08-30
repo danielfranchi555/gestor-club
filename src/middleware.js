@@ -17,5 +17,5 @@ export async function middleware(req) {
 }
 
 export const config = {
-  matcher: ['/', '/cancha/:path*', '/admin/:path*'],
+  matcher: ['/', '/cancha/:path*', '/admin/:path*', '/reservas'],
 };

@@ -1,7 +1,7 @@
 import z from 'zod';
 
 export const schemaSignUp = z.object({
-  name: z.string().min(2, { message: 'Name is required' }),
+  username: z.string().min(2, { message: 'Name is required' }),
   lastname: z.string().min(2, { message: 'Lastname is required' }),
   email: z
     .string()

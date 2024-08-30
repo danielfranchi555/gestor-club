@@ -6,8 +6,8 @@ import { Mobile } from './Mobile';
 
 const Navbar = ({ user }) => {
   return (
-    <div className={` ${open ? '' : 'shadow-sm'}  `}>
-      <div className="flex justify-between items-center bg-blue-200 mb-0">
+    <div>
+      <div className="flex justify-between items-center  mb-0">
         {/* // DESKTOP */}
         <ul className="hidden md:px-4 md:flex items-center md:gap-4">
           <div className="flex justify-between text-sm py-3  items-center gap-2">
@@ -21,11 +21,9 @@ const Navbar = ({ user }) => {
           </Link>
         </ul>
       </div>
-      {/* // DESKTOP */}
 
       {/* MOBILE */}
       <Mobile />
-      {/* MOBILE */}
     </div>
   );
 };

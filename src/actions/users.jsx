@@ -1,10 +1,10 @@
 import { createSupabaseFrontendClient } from '@/utils/supabase/client';
 export async function createAccountAction(formData) {
   try {
-    // const name = formData.name;
-    // const lastname = formData.email;
     const email = formData.email;
     const password = formData.password;
+    const username = formData.username;
+    const lastname = formData.lastname;
 
     const supabase = createSupabaseFrontendClient();
 
@@ -13,6 +13,10 @@ export async function createAccountAction(formData) {
       password,
       options: {
         emailRedirectTo: `${window.location.origin}/callback`,
+        data: {
+          username,
+          lastname,
+        },
       },
     });
 

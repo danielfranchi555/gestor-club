@@ -25,6 +25,8 @@ const page = () => {
 
   // const { toast } = useToast();
   const handleSignUp = (formData) => {
+    console.log(formData);
+
     setTransition(async () => {
       const { error } = await createAccountAction(formData);
       if (error) {
@@ -50,7 +52,7 @@ const page = () => {
             type="text"
             placeholder="name"
             name="name"
-            {...register('name')}
+            {...register('username')}
           />
           {errors.name?.message && (
             <p className="text-red-400 text-sm">{errors.name?.message}</p>

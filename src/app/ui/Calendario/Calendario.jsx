@@ -8,13 +8,6 @@ import { Alert } from '../Alert/Alert';
 const Calendario = ({ data }) => {
   const { date, setDate, error } = useContext(ContextReservation);
 
-  // format date
-  const options = {
-    day: 'numeric', // Día del mes
-    month: 'long', // Mes completo
-    year: 'numeric', // Año completo
-  };
-
   const today = new Date();
   const oneWeekFromToday = new Date(today);
   oneWeekFromToday.setDate(today.getDate() + 30);
@@ -36,10 +29,6 @@ const Calendario = ({ data }) => {
             toDate={oneWeekFromToday}
             className="rounded-md border shadow w-full   "
           />
-          <span>
-            fecha seleccionada:{' '}
-            {today ? today.toLocaleDateString('es-ES', options) : ''}
-          </span>
         </div>
         <div className="col-span-1">
           <Horarios />
