@@ -35,8 +35,6 @@ const ReservationContext = ({ children }) => {
 
   const getHorariosReservadosPorFecha = async () => {
     setTransitionHorarios(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
       try {
         // Obtener todos los horarios
         const { data: horariosData, error: horariosError } = await supabase

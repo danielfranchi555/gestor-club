@@ -12,7 +12,6 @@ export async function createAccountAction(formData) {
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/callback`,
         data: {
           username,
           lastname,
@@ -102,3 +101,18 @@ export const getUser = async () => {
     return { message: error };
   }
 };
+
+export async function deleteReservation(idReserva) {
+  const supabase = createSupabaseFrontendClient();
+
+  try {
+    const response = await supabase
+      .from('reservas')
+      .delete()
+      .eq('id_reserva', idReserva);
+
+    console.log(response);
+  } catch (error) {
+    return { message: error };
+  }
+}

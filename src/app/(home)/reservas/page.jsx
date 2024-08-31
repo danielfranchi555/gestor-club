@@ -1,12 +1,14 @@
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
 import { getReservaFromIdUser, getUser } from '@/actions/data';
+import ButtonDelete from '@/components/clients/ButtonDelete/ButtonDelete';
 
 const page = async () => {
   // obtener la informacion del usuario
@@ -23,12 +25,12 @@ const page = async () => {
     console.log(errorReserva);
   }
 
-  console.log(reservas);
-
   return (
     <div className=" max-w-[95%] mx-auto">
       <h2 className="text-2xl font-bold py-4">Reservas</h2>
       <Table className=" border rounded-md shadow-md">
+        <TableCaption>No se encuentran Reservas</TableCaption>
+
         <TableHeader>
           <TableRow className="text-xs md:text-[14px]">
             <TableHead>Fecha</TableHead>
@@ -64,9 +66,7 @@ const page = async () => {
                 {res.estado_pago}
               </TableCell>
               <TableCell className="text-center md:text-center">
-                <button className="bg-red-500 text-white px-2 py-1 rounded-md">
-                  Cancelar
-                </button>
+                <ButtonDelete idReserva={res.id_reserva} />
               </TableCell>
             </TableRow>
           ))}

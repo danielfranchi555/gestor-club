@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { schemaSignUp } from '../schema';
 import Link from 'next/link';
 import { Label } from '@/components/ui/label';
+import { useRouter } from 'next/navigation';
 
 const page = () => {
   const [pending, setTransition] = useTransition();
@@ -22,6 +23,7 @@ const page = () => {
     reset,
     formState: { errors },
   } = useForm({ resolver: zodResolver(schemaSignUp) });
+  const router = useRouter();
 
   // const { toast } = useToast();
   const handleSignUp = (formData) => {
@@ -38,6 +40,7 @@ const page = () => {
       } else {
         setSubmited(true);
         reset();
+        router.push('/');
       }
     });
   };
