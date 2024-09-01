@@ -29,7 +29,7 @@ export function Alert({ price }) {
     <AlertDialog>
       {error && <p>{error}</p>}
       <AlertDialogTrigger asChild>
-        <Button variant="default" disabled={!selected.id}>
+        <Button variant="default" disabled={!selected.id || !date}>
           Continuar{' '}
         </Button>
       </AlertDialogTrigger>

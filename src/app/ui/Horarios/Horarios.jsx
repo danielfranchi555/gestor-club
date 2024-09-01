@@ -13,6 +13,7 @@ const Horarios = () => {
     horarios,
     pendingHorarios,
   } = useContext(ContextReservation);
+
   const supabase = createSupabaseFrontendClient();
 
   useEffect(() => {
@@ -21,7 +22,7 @@ const Horarios = () => {
       .channel('reservas')
       .on(
         'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'reservas' },
+        { event: '*', schema: 'public', table: 'reservas' },
         (payload) => {
           console.log('Nueva reserva:', payload);
           getHorariosReservadosPorFecha(); // Actualizar los horarios cuando se detecta una nueva reserva

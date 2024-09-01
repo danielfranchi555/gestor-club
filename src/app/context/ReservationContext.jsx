@@ -21,6 +21,7 @@ const ReservationContext = ({ children }) => {
   const { toast } = useToast();
   // Id de la cancha
   const { id } = useParams();
+  console.log({ idCancha: id });
 
   // obtenemos la info del user
   const getInfoUser = async () => {
@@ -71,30 +72,32 @@ const ReservationContext = ({ children }) => {
         // Setear los horarios filtrados
         setHorarios(filteredHorarios);
       } catch (error) {
-        console.error('Error al obtener horarios o reservas:', error.message);
+        console.error('Error al obtener horarios o reservas:', error);
       }
     });
   };
 
   useEffect(() => {
-    getHorariosReservadosPorFecha();
-    // Suscribirse a los cambios en tiempo real en la tabla de reservas
-    const subscription = supabase
-      .channel('reservas')
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'reservas' },
-        (payload) => {
-          console.log('Nueva reserva:', payload);
-          getHorariosReservadosPorFecha(); // Actualizar los horarios cuando se detecta una nueva reserva
-        },
-      )
-      .subscribe();
+    if (id) {
+      getHorariosReservadosPorFecha();
+      // Suscribirse a los cambios en tiempo real en la tabla de reservas
+      const subscription = supabase
+        .channel('reservas')
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'reservas' },
+          (payload) => {
+            console.log('Nueva reserva:', payload);
+            getHorariosReservadosPorFecha(); // Actualizar los horarios cuando se detecta una nueva reserva
+          },
+        )
+        .subscribe();
 
-    return () => {
-      subscription.unsubscribe(); // Limpiar la suscripción cuando el componente se desmonte
-    };
-  }, [date]);
+      return () => {
+        subscription.unsubscribe(); // Limpiar la suscripción cuando el componente se desmonte
+      };
+    }
+  }, [date, id]);
 
   const handleReservation = async (selected, date, price) => {
     setTransitionReservation(async () => {
