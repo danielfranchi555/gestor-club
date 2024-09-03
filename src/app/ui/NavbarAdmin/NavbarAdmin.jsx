@@ -11,6 +11,7 @@ import { GiTennisCourt } from 'react-icons/gi';
 import { GoSignOut } from 'react-icons/go';
 import { signOut } from '@/actions/users';
 import { useRouter } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
 const NavbarAdmin = () => {
   const [open, setOpen] = useState(false);
   const [pending, setTransition] = useTransition();
@@ -47,7 +48,9 @@ const NavbarAdmin = () => {
       icon: <GoSignOut onClick={() => closeSession()} size={25} />,
     },
   ];
-
+  if (pending) {
+    return <Loader2 className="animate-spin" />;
+  }
   return (
     <div className=" flex flex-col bg-muted/20 ">
       <div className="py-4 px-4 flex items-center justify-between md:flex-col">
