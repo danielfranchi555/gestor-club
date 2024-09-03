@@ -1,11 +1,21 @@
 import NavbarAdmin from '../ui/NavbarAdmin/NavbarAdmin';
+import { ThemeProvider } from '@/components/theme-provider';
 
 const layout = ({ children }) => {
   return (
-    <main className="flex flex-col md:flex md:flex-row md:w-[100%]">
-      <NavbarAdmin className="w-[50%]" />
-      <div className=" w-full">{children}</div>
-    </main>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+    >
+      <main className="flex flex-col h-full md:flex-row md:w-[100%] ">
+        <NavbarAdmin className="h-auto" />
+        <div className="w-full  ">
+          <div className="px-4 ">{children}</div>
+        </div>
+      </main>
+    </ThemeProvider>
   );
 };
 

@@ -15,6 +15,8 @@ const ReservationContext = ({ children }) => {
   const [selected, setSelected] = useState({ id: null, horarioInicial: '' });
   const [error, setError] = useState('');
   const [idUser, setIdUser] = useState(null);
+  const [user, setUser] = useState(null);
+
   // Transitions
   const [pendingReservation, setTransitionReservation] = useTransition();
   const [pendingHorarios, setTransitionHorarios] = useTransition();
@@ -28,11 +30,14 @@ const ReservationContext = ({ children }) => {
     const { data, error } = await getUser();
     if (error) console.log(error);
     setIdUser(data?.user?.id);
+    setUser(data?.user.user_metadata);
   };
 
   useEffect(() => {
     getInfoUser();
   }, []);
+
+  console.log(user);
 
   const getHorariosReservadosPorFecha = async () => {
     setTransitionHorarios(async () => {
@@ -100,41 +105,46 @@ const ReservationContext = ({ children }) => {
   }, [date, id]);
 
   const handleReservation = async (selected, date, price) => {
-    setTransitionReservation(async () => {
-      try {
-        if (!selected.id || !date || !idUser || !id || !price) {
-          setError('Ocurrio un error intenta nuevamente');
-          return { message: 'Ocurrio un error intenta nuevamente' };
+    if (user) {
+      setTransitionReservation(async () => {
+        try {
+          if (!selected.id || !date || !idUser || !id || !price || !user) {
+            setError('Ocurrio un error intenta nuevamente');
+            return { message: 'Ocurrio un error intenta nuevamente' };
+          }
+          // crear el objeto listo para mandar a la db
+          const reservation = {
+            id_horario: selected.id,
+            reserva_fecha: date.toISOString().split('T')[0],
+            id_usuario: idUser && idUser,
+            id_cancha: id,
+            price: price,
+            name_user: user.username,
+            lastname_user: user.lastname,
+            email_user: user.email,
+          };
+
+          // antes de insertar verificar que no haya una reserva a la misma hora el mismo dia
+          const { data, error } = await supabase
+            .from('reservas')
+            .insert(reservation);
+
+          if (error) {
+            console.log(reservation);
+            return { data: null, error: error.message };
+          }
+
+          toast({
+            title: 'Reserva Exitosa!',
+            description: 'Friday, February 10, 2023 at 5:57 PM',
+          });
+          setSelected({ id: null, horarioInicial: '' });
+          return { data, error: null };
+        } catch (error) {
+          return { message: error };
         }
-        // crear el objeto listo para mandar a la db
-        const reservation = {
-          id_horario: selected.id,
-          reserva_fecha: date.toISOString().split('T')[0],
-          id_usuario: idUser && idUser,
-          id_cancha: id,
-          price: price,
-        };
-
-        // antes de insertar verificar que no haya una reserva a la misma hora el mismo dia
-        const { data, error } = await supabase
-          .from('reservas')
-          .insert(reservation);
-
-        if (error) {
-          console.log(reservation);
-          return { data: null, error: error.message };
-        }
-
-        toast({
-          title: 'Reserva Exitosa!',
-          description: 'Friday, February 10, 2023 at 5:57 PM',
-        });
-        setSelected({ id: null, horarioInicial: '' });
-        return { data, error: null };
-      } catch (error) {
-        return { message: error };
-      }
-    });
+      });
+    }
   };
 
   return (

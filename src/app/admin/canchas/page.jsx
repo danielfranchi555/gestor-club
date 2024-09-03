@@ -1,5 +1,5 @@
 const canchas = () => {
-  return <div>canchas</div>;
+  return <div className="w-full bg-red-500">canchas</div>;
 };
 
 export default canchas;

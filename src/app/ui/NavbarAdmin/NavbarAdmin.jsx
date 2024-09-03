@@ -1,22 +1,55 @@
 'use client';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import logo from '../../../../public/logo-club.jpg';
 import Image from 'next/image';
-
+import { FiHome } from 'react-icons/fi';
+import { CgNotes } from 'react-icons/cg';
+import { LuUsers } from 'react-icons/lu';
+import { GiTennisCourt } from 'react-icons/gi';
+import { GoSignOut } from 'react-icons/go';
+import { signOut } from '@/actions/users';
+import { useRouter } from 'next/navigation';
 const NavbarAdmin = () => {
   const [open, setOpen] = useState(false);
+  const [pending, setTransition] = useTransition();
+  const router = useRouter();
+
+  const closeSession = async () => {
+    setTransition(async () => {
+      const { data, error } = await signOut();
+      if (error) {
+        console.log(error);
+      }
+      console.log({ message: data });
+
+      router.refresh();
+    });
+  };
 
   const nav = [
-    { name: 'Dashboard', link: '/admin/dashboard' },
-    { name: 'Users', link: '/admin/users' },
-    { name: 'Reservations', link: '/admin/reservations' },
-    { name: 'Canchas', link: '/admin/canchas' },
+    { name: 'Dashboard', link: '/admin', icon: <FiHome size={25} /> },
+    { name: 'Users', link: '/admin/users', icon: <LuUsers size={25} /> },
+    {
+      name: 'Reservations',
+      link: '/admin/reservations',
+      icon: <CgNotes size={25} />,
+    },
+    {
+      name: 'Canchas',
+      link: '/admin/canchas',
+      icon: <GiTennisCourt size={25} />,
+    },
+    {
+      name: 'Sign out',
+      link: '',
+      icon: <GoSignOut onClick={() => closeSession()} size={25} />,
+    },
   ];
 
   return (
-    <div className="bg-slate-100 flex flex-col">
+    <div className=" flex flex-col bg-muted/20 ">
       <div className="py-4 px-4 flex items-center justify-between md:flex-col">
         <Image
           src={logo}
@@ -30,10 +63,12 @@ const NavbarAdmin = () => {
           size={30}
           onClick={() => setOpen(!open)}
         />
-        <ul className="hidden md:flex md:flex-col md:items-start md:gap-10  md:mt-10 md:h-screen">
+        <ul className="hidden md:flex md:flex-col md:items-start md:gap-4  md:mt-10 md:h-screen">
           {nav.map((item) => (
             <Link key={item} href={item.link}>
-              <li>{item.name}</li>
+              <li className="hover:scale-105 transition-transform duration-300 ease-in-out">
+                {item.icon}
+              </li>
             </Link>
           ))}
         </ul>

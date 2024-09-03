@@ -11,7 +11,7 @@ import ButtonDelete from '@/components/clients/ButtonDelete/ButtonDelete';
 import { useEffect, useState, useTransition } from 'react';
 import { getUser } from '@/actions/users';
 import { createSupabaseFrontendClient } from '@/utils/supabase/client';
-import { Loader2 } from 'lucide-react';
+import Reservas from '@/skeleton/Reservas';
 
 const page = () => {
   const [userId, setUserId] = useState(null);
@@ -80,10 +80,9 @@ const page = () => {
   return (
     <div className=" max-w-[95%] mx-auto">
       <h2 className="text-2xl font-bold py-4">Reservas</h2>
-
       {loading ? (
-        <div className="flex w-full h-full items-center justify-center">
-          <Loader2 className="animate-spin" color="blue" />
+        <div className="">
+          <Reservas />
         </div>
       ) : (
         <Table className=" border rounded-md shadow-md">

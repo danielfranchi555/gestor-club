@@ -13,6 +13,7 @@ export async function createAccountAction(formData) {
       password,
       options: {
         data: {
+          email,
           username,
           lastname,
         },

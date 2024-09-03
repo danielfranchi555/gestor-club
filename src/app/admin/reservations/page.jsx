@@ -1,3 +1,4 @@
+import { Navigate } from '@/app/ui/admin/Navigate/Navigate';
 import TableData from '@/app/ui/admin/Table/TableData';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
@@ -13,8 +14,10 @@ const page = async () => {
   console.log(data);
 
   return (
-    <div className="w-[95%] mx-auto md:container">
-      reservations
+    <div className="">
+      <div className="flex justify-between items-center py-6 ">
+        <Navigate />
+      </div>
       <TableData reservations={data} />
     </div>
   );
