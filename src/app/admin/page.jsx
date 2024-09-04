@@ -6,17 +6,30 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Reservation } from '@/app/ui/admin/Table/Reservation/Reservation';
 import { Metrics } from '@/app/ui/admin/Metrics/Metrics';
 import { Navigate } from '../ui/admin/Navigate/Navigate';
+import { getCountReservations } from '@/actions/admin/reservations';
+import { getCountUsers } from '@/actions/admin/users';
 
 const Dashboard = async () => {
   const cookieStore = cookies();
   const supabase = createServerComponentClient({ cookies: () => cookieStore });
 
-  const { data, error } = await supabase.from('reservas').select(); // Selecciona todas las reservas y los perfiles relacionados
+  const { data, error } = await supabase.from('reservas').select(); // get all reservations
   if (error) {
     return console.log(error);
   }
+  const { data: reservationCount, error: errorReservations } =
+    await getCountReservations(); // get count Reservations
 
-  console.log(data);
+  if (errorReservations) {
+    console.log(errorReservations);
+  }
+
+  const { data: profilesCount, error: errorCountProfiles } =
+    await getCountUsers();
+
+  if (errorCountProfiles) {
+    console.log(errorCountProfiles);
+  }
 
   return (
     <div className="w-full flex flex-col gap-5">
@@ -28,14 +41,14 @@ const Dashboard = async () => {
           <TfiAgenda className=" rounded-md  " size={40} />{' '}
           <div className="flex flex-col">
             <span className="text-gray-400">Reservas</span>
-            <span className="font-bold text-2xl">120</span>
+            <span className="font-bold text-2xl">{reservationCount}</span>
           </div>
         </div>
         <div className="border px-2 shadow-md rounded-md py-4 flex items-center gap-4">
           <CiUser size={50} />{' '}
           <div className="flex flex-col">
             <span className="text-gray-400">Users</span>
-            <span className="font-bold text-2xl">20</span>
+            <span className="font-bold text-2xl">{profilesCount}</span>
           </div>
         </div>
         <div className="border px-2 shadow-md rounded-md py-4 flex items-center gap-4">

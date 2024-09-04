@@ -13,19 +13,25 @@ import { CiUser } from 'react-icons/ci';
 import { Search } from '@/app/ui/admin/Search/Search';
 import { Navigate } from '@/app/ui/admin/Navigate/Navigate';
 
-const page = async () => {
+const page = async ({ searchParams }) => {
+  const query = searchParams.userQuery || '';
   const cookieStore = cookies();
   const supabase = createServerComponentClient({ cookies: () => cookieStore });
 
-  const { data, error } = await supabase.from('profiles').select();
+  const { data, error } = await supabase
+    .from('profiles')
+    .select()
+    .ilike('lastname', `%${query}%`);
 
-  if (error) return console.log(error);
+  if (error) {
+    console.log(error);
+  }
 
   return (
     <div>
       <div className="flex justify-between items-center py-4">
         <Navigate />
-        <Search />
+        <Search query={'userQuery'} />
       </div>
       <div className="bg-muted/20 rounded-md p-6 ">
         <div>

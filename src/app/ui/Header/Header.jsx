@@ -9,8 +9,6 @@ const Header = async () => {
     console.log(error);
   }
 
-  console.log(user);
-
   return (
     <div className="flex items-center justify-between py-4 md:py-2 px-5 mb-10 shadow-md">
       <div className="flex items-center gap-4">

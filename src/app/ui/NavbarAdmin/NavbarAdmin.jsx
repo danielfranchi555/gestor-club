@@ -48,9 +48,18 @@ const NavbarAdmin = () => {
       icon: <GoSignOut onClick={() => closeSession()} size={25} />,
     },
   ];
+
   if (pending) {
-    return <Loader2 className="animate-spin" />;
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-black/80 z-50">
+        <div className="flex flex-col items-center">
+          <Loader2 className="animate-spin text-white" />
+          <p className="text-white text-md">Closing Session..</p>
+        </div>
+      </div>
+    );
   }
+
   return (
     <div className=" flex flex-col bg-muted/20 ">
       <div className="py-4 px-4 flex items-center justify-between md:flex-col">
