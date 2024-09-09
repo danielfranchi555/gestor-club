@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { TfiAgenda } from 'react-icons/tfi';
 import { DropdownMenuDemo } from '../DropDown/DropDown';
 import { Mobile } from './Mobile';
+import ButtonTheme from '../ButtonTheme/ButtonTheme';
 
 const Navbar = ({ user }) => {
   return (
@@ -19,6 +20,7 @@ const Navbar = ({ user }) => {
           >
             <span>Reservas</span> <TfiAgenda size={20} />
           </Link>
+          <ButtonTheme />
         </ul>
       </div>
 

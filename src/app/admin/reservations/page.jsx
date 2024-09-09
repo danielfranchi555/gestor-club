@@ -12,11 +12,6 @@ const page = async ({ searchParams }) => {
 
   const supabase = createServerComponentClient({ cookies: () => cookieStore });
 
-  // const { data, error } = await supabase
-  //   .from('reservas')
-  //   .select()
-  //   .ilike('lastname_user', `%${query}%`);
-
   let reservationsQuery = supabase
     .from('reservas')
     .select()

@@ -23,7 +23,6 @@ const ReservationContext = ({ children }) => {
   const { toast } = useToast();
   // Id de la cancha
   const { id } = useParams();
-  console.log({ idCancha: id });
 
   // obtenemos la info del user
   const getInfoUser = async () => {
@@ -36,8 +35,6 @@ const ReservationContext = ({ children }) => {
   useEffect(() => {
     getInfoUser();
   }, []);
-
-  console.log(user);
 
   const getHorariosReservadosPorFecha = async () => {
     setTransitionHorarios(async () => {
@@ -67,8 +64,6 @@ const ReservationContext = ({ children }) => {
           .map((reserva) => reserva.id_horario)
           .filter((id) => id !== null && id !== ''); // Filtra IDs inválidos
 
-        console.log(reservedIds);
-
         // Filtrar los horarios no reservados en el frontend
         const filteredHorarios = horariosData.filter(
           (horario) => !reservedIds.includes(horario.id),
@@ -77,7 +72,7 @@ const ReservationContext = ({ children }) => {
         // Setear los horarios filtrados
         setHorarios(filteredHorarios);
       } catch (error) {
-        console.error('Error al obtener horarios o reservas:', error);
+        return { message: error };
       }
     });
   };
@@ -90,9 +85,8 @@ const ReservationContext = ({ children }) => {
         .channel('reservas')
         .on(
           'postgres_changes',
-          { event: 'INSERT', schema: 'public', table: 'reservas' },
+          { event: '*', schema: 'public', table: 'reservas' },
           (payload) => {
-            console.log('Nueva reserva:', payload);
             getHorariosReservadosPorFecha(); // Actualizar los horarios cuando se detecta una nueva reserva
           },
         )
@@ -130,7 +124,6 @@ const ReservationContext = ({ children }) => {
             .insert(reservation);
 
           if (error) {
-            console.log(reservation);
             return { data: null, error: error.message };
           }
 

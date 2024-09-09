@@ -1,5 +1,6 @@
 import NavbarAdmin from '../ui/NavbarAdmin/NavbarAdmin';
 import { ThemeProvider } from '@/components/theme-provider';
+import { Toaster } from '@/components/ui/toaster';
 
 const layout = ({ children }) => {
   return (
@@ -14,6 +15,7 @@ const layout = ({ children }) => {
         <div className="w-full  ">
           <div className="px-4 ">{children}</div>
         </div>
+        <Toaster />
       </main>
     </ThemeProvider>
   );

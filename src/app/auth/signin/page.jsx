@@ -14,6 +14,7 @@ const page = () => {
   const [pending, setTransition] = useTransition();
   const [error, setError] = useState(null);
   const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -22,13 +23,17 @@ const page = () => {
 
   const handleSignIn = async (formData) => {
     setTransition(async () => {
-      const { error } = await loginAction(formData);
+      const { role, error } = await loginAction(formData);
       if (error) {
         setError(error);
         console.log(error);
       } else {
-        router.push('/');
-        router.refresh();
+        if (role !== 'admin') {
+          router.push('/');
+        } else {
+          router.push('/admin');
+          router.refresh();
+        }
       }
     });
   };

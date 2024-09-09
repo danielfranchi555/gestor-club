@@ -8,7 +8,7 @@ export const Reservation = ({ data }) => {
         <p className="text-sm">You made 265 sales this month.</p>
       </div>
       <ul className="flex flex-col gap-2">
-        {data?.map((reserva) => (
+        {data?.slice(0, 10).map((reserva) => (
           <li key={reserva.id_reserva} className="flex justify-between">
             <div className="flex gap-2 items-center">
               <CiUser size={20} />

@@ -41,8 +41,9 @@ export async function loginAction(formData) {
     const email = formData.email;
     const password = formData.password;
 
-    const { auth } = createSupabaseFrontendClient();
-    const { data, error } = await auth.signInWithPassword({
+    const supabase = createSupabaseFrontendClient();
+
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -68,7 +69,18 @@ export async function loginAction(formData) {
       return { data: null, error: customErrorMessage };
     }
 
-    return { data, error: null };
+    const { data: userId, error: errorUser } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', data.user.id);
+
+    if (errorUser) {
+      return { erroGetRoleUser: errorUser };
+    }
+
+    const roleUser = userId[0].role;
+
+    return { data, role: roleUser, error: null };
   } catch (error) {
     return { data: null, error: error.message };
   }
@@ -111,9 +123,25 @@ export async function deleteReservation(idReserva) {
       .from('reservas')
       .delete()
       .eq('id_reserva', idReserva);
-
-    console.log(response);
+    return { response };
   } catch (error) {
     return { message: error };
   }
 }
+
+export const getCountUsers = async () => {
+  const supabase = createSupabaseFrontendClient();
+  try {
+    const { count, error } = await supabase
+      .from('profiles')
+      .select('*', { count: 'exact', head: true });
+
+    if (error) {
+      return { data: null, error: error };
+    }
+
+    return { data: count, error: null };
+  } catch (error) {
+    return { message: error };
+  }
+};

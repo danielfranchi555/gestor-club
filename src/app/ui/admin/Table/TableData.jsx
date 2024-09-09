@@ -27,6 +27,7 @@ const TableData = ({ reservations }) => {
           table: 'reservas',
         },
         () => {
+          console.log('hubo un cambio en reservas');
           router.refresh();
         },
       )

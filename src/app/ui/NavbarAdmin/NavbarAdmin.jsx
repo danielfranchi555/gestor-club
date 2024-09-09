@@ -12,6 +12,7 @@ import { GoSignOut } from 'react-icons/go';
 import { signOut } from '@/actions/users';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
+import ButtonTheme from '../ButtonTheme/ButtonTheme';
 const NavbarAdmin = () => {
   const [open, setOpen] = useState(false);
   const [pending, setTransition] = useTransition();
@@ -75,7 +76,7 @@ const NavbarAdmin = () => {
           size={30}
           onClick={() => setOpen(!open)}
         />
-        <ul className="hidden md:flex md:flex-col md:items-start md:gap-4  md:mt-10 md:h-screen">
+        <ul className="hidden md:flex md:flex-col md:items-center  md:gap-4  md:mt-10 md:h-screen">
           {nav.map((item) => (
             <Link key={item} href={item.link}>
               <li className="hover:scale-105 transition-transform duration-300 ease-in-out">
@@ -83,6 +84,7 @@ const NavbarAdmin = () => {
               </li>
             </Link>
           ))}
+          <ButtonTheme />
         </ul>
       </div>
       {open ? (
@@ -92,6 +94,7 @@ const NavbarAdmin = () => {
               <li>{item.name}</li>
             </Link>
           ))}
+          <ButtonTheme />{' '}
         </ul>
       ) : (
         ''
