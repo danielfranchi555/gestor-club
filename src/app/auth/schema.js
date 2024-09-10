@@ -21,5 +21,8 @@ export const schemaSignIn = z.object({
 export const surfaceType = ['cesped', 'hormigon'];
 export const schemaEditCancha = z.object({
   nameCancha: z.string().min(3, { message: 'name is required' }),
-  surface: z.enum(surfaceType, { errorMap: () => ({ message: 'dasd' }) }),
+  surface: z.enum(surfaceType, { errorMap: () => ({ message: 'required' }) }),
+  price: z.number().min(1), // Añade validación de checkbox como booleano
+  covered: z.boolean().default(false), // Añade validación de checkbox como booleano
+  available: z.boolean().default(true), // Añade validación de checkbox como booleano
 });
