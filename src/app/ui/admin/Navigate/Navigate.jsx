@@ -12,10 +12,9 @@ import { usePathname } from 'next/navigation';
 export function Navigate() {
   const pathNmae = usePathname();
   const subPath = pathNmae.split('/admin/')[1];
-  console.log(subPath);
 
   return (
-    <Breadcrumb>
+    <Breadcrumb className="">
       <BreadcrumbList>
         <BreadcrumbItem>
           <Link href={'/admin'}>Dashboard</Link>

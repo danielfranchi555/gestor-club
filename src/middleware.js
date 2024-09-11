@@ -19,8 +19,14 @@ export async function middleware(req) {
     .eq('id', session.user.id)
     .single();
 
+  console.log(session.user.id);
+  console.log({ role: user.role });
+
   const path = req.nextUrl.pathname;
 
+  if (user.role !== 'admin' && path.startsWith('/admin')) {
+    return NextResponse.redirect(new URL('/', req.url)); // Puedes cambiar la URL de redirección si lo prefieres
+  }
   if (user.role === 'admin' && path.startsWith('/auth/signin')) {
     // Redirigir a /admin si es un admin tratando de acceder a rutas de usuario
     return NextResponse.redirect(new URL('/admin', req.url));
@@ -30,5 +36,5 @@ export async function middleware(req) {
 }
 
 export const config = {
-  matcher: ['/', '/cancha/:path*', '/admin/', '/admin/:path*', '/reservas'],
+  matcher: ['/', '/cancha/:path*', '/admin', '/admin/:path*', '/reservas'],
 };

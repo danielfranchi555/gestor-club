@@ -3,18 +3,31 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
 import FormEditCancha from '../FormEditCancha/FormEditCancha';
+import { useState } from 'react';
 
 export function EditCancha({ cancha }) {
+  const [open, setOpen] = useState(false);
+
+  const handleDialogClose = () => {
+    setOpen(false);
+  };
+
   return (
-    <Dialog className="">
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Editar</Button>
+        <div className=" w-full">
+          <Button
+            className="bg-blue-600 w-full hover:bg-blue-500 hover:text-white text-white"
+            variant="outline"
+          >
+            Update
+          </Button>
+        </div>
       </DialogTrigger>
       <DialogContent className="w-[370px] md:w-[520px]">
         <DialogHeader>
@@ -24,16 +37,10 @@ export function EditCancha({ cancha }) {
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-8 py-4">
-          {/* SELECT IMAGE  */}
-
-          {/* SELECT IMAGE  */}
-          <FormEditCancha cancha={cancha} />
+          {/* // FORM */}
+          <FormEditCancha cancha={cancha} onClose={handleDialogClose} />
+          {/* // FORM */}
         </div>
-        <DialogFooter>
-          <Button className="w-full" type="submit">
-            Save changes
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
