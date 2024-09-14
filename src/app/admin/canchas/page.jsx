@@ -35,16 +35,18 @@ const canchas = async () => {
         {canchas?.map((cancha) => (
           <div
             key={cancha.id}
-            className="border flex flex-col gap-4 rounded-md p-4"
+            className="border flex flex-col gap-4 rounded-md p-4 bg-red-500"
           >
             <div className="relative rounded-md">
-              <Image
-                src={cancha.image}
-                width={600}
-                height={100}
-                alt="image-cancha"
-                className="w-full rounded-md"
-              />
+              <div className="w-full h-[290px]">
+                <Image
+                  src={cancha.image}
+                  width={600}
+                  height={700}
+                  alt="image-cancha"
+                  className=" w-full h-full rounded-md "
+                />
+              </div>
               <div className="w-full absolute bg-black/50 top-0 h-full"></div>
               <div
                 className={`${cancha.available ? 'bg-blue-600' : 'bg-gray-400'} absolute top-2 w-[100px] py-2  right-2 px-2 rounded-md text-white`}

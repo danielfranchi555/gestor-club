@@ -27,10 +27,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 
 const FormEditCancha = ({ cancha, onClose }) => {
+  const [image, setImage] = useState(cancha?.image);
   const [pending, setTransition] = useTransition();
   const { toast } = useToast();
   const router = useRouter();
@@ -46,10 +47,19 @@ const FormEditCancha = ({ cancha, onClose }) => {
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = (formData) => {
     setTransition(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      handleSubmitCourtEdit(data, cancha.id_cancha);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const { publicUrl, error } = await handleSubmitCourtEdit(
+        formData,
+        cancha.id_cancha,
+      );
+      if (error) {
+        console.log(error);
+      } else {
+        console.log(publicUrl);
+      }
+
       toast({
         title: 'Court Updated success',
       });
@@ -68,17 +78,29 @@ const FormEditCancha = ({ cancha, onClose }) => {
             render={({ field }) => (
               <>
                 <div className=" flex flex-col items-center justify-center gap-1 w-full">
-                  <div className="flex flex-col items-center justify-center border border-gray-300 border-dashed gap-2  md:w-[300px] rounded-md p-4">
-                    <Image
-                      src={cancha?.image}
-                      width={500}
-                      height={400}
-                      alt="image-cancha"
-                      className="w-full rounded-md"
-                    />
+                  <div className="flex flex-col items-center justify-center border border-gray-300 border-dashed gap-2  md:max-w-[300px]   rounded-md p-4">
+                    <div className="w-[200px] h-[150px] bg-red-500 ">
+                      <Image
+                        src={image}
+                        width={500}
+                        height={700}
+                        alt="image-cancha"
+                        className="w-full h-full rounded-md"
+                      />
+                    </div>
                     <label>
                       <FormControl>
-                        <Input type="file" {...field} />
+                        <Input
+                          type="file"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              // Actualiza el estado con la URL del archivo seleccionado
+                              setImage(URL.createObjectURL(file));
+                              field.onChange(file); // También actualiza el valor en el formulario
+                            }
+                          }}
+                        />
                       </FormControl>
                       <FormMessage />
                     </label>

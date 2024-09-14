@@ -19,28 +19,31 @@ export const schemaSignIn = z.object({
 
 // edit cancha
 export const surfaceType = ['cesped', 'hormigon'];
+const MAX_UPLOAD_SIZE = 1024 * 1024 * 3; // 3MB
+const ACCEPTED_IMAGE_TYPES = [
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/webp',
+];
+
 export const schemaEditCancha = z.object({
   name: z.string().min(1),
   image: z
-    .instanceof(FileList)
-    .optional() // El campo ahora es opcional
-    .refine(
-      (files) =>
-        !files ||
-        files.length === 0 ||
-        ['image/png', 'image/jpeg', 'image/webp'].includes(files[0]?.type),
-      { message: 'Only .png, .jpg, and .webp files are accepted' },
-    )
-    .refine(
-      (files) =>
-        !files || files.length === 0 || files[0]?.size <= 5 * 1024 * 1024,
-      { message: 'Image must be smaller than 5MB' },
-    ),
-
+    .instanceof(File)
+    .optional()
+    .refine((file) => {
+      // Si el archivo no existe, no se aplica validación adicional
+      return !file || file.size <= MAX_UPLOAD_SIZE;
+    }, 'File size must be less than 3MB')
+    .refine((file) => {
+      // Verificar si el archivo existe antes de comprobar el tipo
+      return !file || ACCEPTED_IMAGE_TYPES.includes(file.type);
+    }, 'File must be a PNG, jpg, webp'),
   surface_type: z.enum(surfaceType, {
     errorMap: () => ({ message: 'required' }),
   }),
-  price: z.number().min(1), // Añade validación de checkbox como booleano
-  covered: z.boolean().default(false), // Añade validación de checkbox como booleano
-  available: z.boolean().default(true), // Añade validación de checkbox como booleano
+  price: z.number().min(1),
+  covered: z.boolean().default(false),
+  available: z.boolean().default(true),
 });
