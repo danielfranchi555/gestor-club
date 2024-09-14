@@ -27,7 +27,7 @@ const ACCEPTED_IMAGE_TYPES = [
   'image/webp',
 ];
 
-export const schemaEditCancha = z.object({
+export const schemaCourt = z.object({
   name: z.string().min(1),
   image: z
     .instanceof(File)
@@ -41,6 +41,20 @@ export const schemaEditCancha = z.object({
       return !file || ACCEPTED_IMAGE_TYPES.includes(file.type);
     }, 'File must be a PNG, jpg, webp'),
   surface_type: z.enum(surfaceType, {
+    errorMap: () => ({ message: 'required' }),
+  }),
+  price: z.number().min(1),
+  covered: z.boolean().default(false),
+  available: z.boolean().default(true),
+});
+
+export const schemaAddCourt = z.object({
+  name: z.string().min(1),
+  image: z.instanceof(File).refine((file) => {
+    // Verificar si el archivo existe antes de comprobar el tipo
+    return !file || ACCEPTED_IMAGE_TYPES.includes(file.type);
+  }, 'File must be a PNG, jpg, webp'),
+  surface: z.enum(surfaceType, {
     errorMap: () => ({ message: 'required' }),
   }),
   price: z.number().min(1),

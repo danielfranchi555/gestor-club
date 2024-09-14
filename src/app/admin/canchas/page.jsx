@@ -5,8 +5,9 @@ import { AiTwotoneSafetyCertificate, AiTwotoneStop } from 'react-icons/ai';
 import { useEffect, useState } from 'react';
 import { EditCancha } from '@/app/ui/admin/EditCancha/EditCancha';
 import { Navigate } from '@/app/ui/admin/Navigate/Navigate';
+import AddCourt from '@/app/ui/admin/AddCourt/AddCourt';
 
-const canchas = async () => {
+const canchas = () => {
   const [canchas, setCanchas] = useState([]);
   const supabase = createSupabaseFrontendClient();
 
@@ -28,14 +29,17 @@ const canchas = async () => {
 
   return (
     <>
-      <div className="py-10">
+      <div className="py-10 ">
         <Navigate />
+      </div>
+      <div className="">
+        <AddCourt />
       </div>
       <div className=" grid grid-cols-1 w-full lg:grid-cols-3  gap-6  py-4">
         {canchas?.map((cancha) => (
           <div
             key={cancha.id}
-            className="border flex flex-col gap-4 rounded-md p-4 bg-red-500"
+            className="border flex flex-col gap-4 rounded-md p-4 "
           >
             <div className="relative rounded-md">
               <div className="w-full h-[290px]">

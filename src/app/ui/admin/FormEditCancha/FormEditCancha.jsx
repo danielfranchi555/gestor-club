@@ -1,6 +1,6 @@
 'use client';
-import { handleSubmitCourtEdit } from '@/actions/admin/editCourt';
-import { schemaEditCancha } from '@/app/auth/schema';
+import { handleSubmitCourtEdit } from '@/actions/admin/clientSide/editCourt';
+import { schemaCourt } from '@/app/auth/schema';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -26,7 +26,6 @@ import { useToast } from '@/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -34,10 +33,9 @@ const FormEditCancha = ({ cancha, onClose }) => {
   const [image, setImage] = useState(cancha?.image);
   const [pending, setTransition] = useTransition();
   const { toast } = useToast();
-  const router = useRouter();
 
   const form = useForm({
-    resolver: zodResolver(schemaEditCancha),
+    resolver: zodResolver(schemaCourt),
     defaultValues: {
       name: cancha?.name,
       covered: cancha?.covered,
@@ -47,9 +45,8 @@ const FormEditCancha = ({ cancha, onClose }) => {
     },
   });
 
-  const onSubmit = (formData) => {
+  const onSubmit = async (formData) => {
     setTransition(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
       const { publicUrl, error } = await handleSubmitCourtEdit(
         formData,
         cancha.id_cancha,
@@ -58,13 +55,12 @@ const FormEditCancha = ({ cancha, onClose }) => {
         console.log(error);
       } else {
         console.log(publicUrl);
+        toast({
+          title: 'Court Updated success',
+        });
+        onClose();
       }
-
-      toast({
-        title: 'Court Updated success',
-      });
-      router.refresh();
-      onClose();
+      // location.reload();
     });
   };
 
@@ -79,7 +75,7 @@ const FormEditCancha = ({ cancha, onClose }) => {
               <>
                 <div className=" flex flex-col items-center justify-center gap-1 w-full">
                   <div className="flex flex-col items-center justify-center border border-gray-300 border-dashed gap-2  md:max-w-[300px]   rounded-md p-4">
-                    <div className="w-[200px] h-[150px] bg-red-500 ">
+                    <div className="w-[200px] h-[150px]  ">
                       <Image
                         src={image}
                         width={500}
