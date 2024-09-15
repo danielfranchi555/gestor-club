@@ -1,4 +1,3 @@
-import { signOut } from '@/actions/users';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -11,6 +10,7 @@ import {
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import { Loader2 } from 'lucide-react';
+import { signOut } from '@/actions/auth/actionsAuth';
 
 export function DropdownMenuDemo({ user }) {
   const [pending, setTransition] = useTransition();

@@ -7,9 +7,9 @@ import { Metrics } from '@/app/ui/admin/Metrics/Metrics';
 import { Navigate } from '../ui/admin/Navigate/Navigate';
 import { createSupabaseFrontendClient } from '@/utils/supabase/client';
 import { useEffect, useState, useTransition } from 'react';
-import { getCountUsers } from '@/actions/users';
 import useRealtime from '../Hooks/useRealtime';
 import { Loader2 } from 'lucide-react';
+import { getCountUsers } from '@/actions/ClientSide/user';
 
 const Dashboard = () => {
   const supabase = createSupabaseFrontendClient();

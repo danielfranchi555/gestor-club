@@ -2,12 +2,12 @@ import { useState, useTransition } from 'react';
 import { RiAccountCircleFill } from 'react-icons/ri';
 import { TfiAgenda } from 'react-icons/tfi';
 import { IoIosLogOut } from 'react-icons/io';
-import { signOut } from '@/actions/users';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { IoCloseSharp } from 'react-icons/io5';
+import { signOut } from '@/actions/auth/actionsAuth';
 
 export const Mobile = () => {
   const [open, setOpen] = useState(false);

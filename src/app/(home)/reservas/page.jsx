@@ -9,9 +9,9 @@ import {
 } from '@/components/ui/table';
 import ButtonDelete from '@/components/clients/ButtonDelete/ButtonDelete';
 import { useEffect, useState, useTransition } from 'react';
-import { getUser } from '@/actions/users';
 import { createSupabaseFrontendClient } from '@/utils/supabase/client';
 import Reservas from '@/skeleton/Reservas';
+import { getUser } from '@/actions/ClientSide/user';
 
 const page = () => {
   const [userId, setUserId] = useState(null);

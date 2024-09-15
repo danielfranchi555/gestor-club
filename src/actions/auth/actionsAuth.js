@@ -1,4 +1,5 @@
 import { createSupabaseFrontendClient } from '@/utils/supabase/client';
+
 export async function createAccountAction(formData) {
   try {
     const email = formData.email;
@@ -99,49 +100,3 @@ export async function signOut() {
     return { data: null, error };
   }
 }
-
-export const getUser = async () => {
-  try {
-    const supabase = createSupabaseFrontendClient();
-    const { data, error } = await supabase.auth.getUser();
-
-    if (error) {
-      return { data: null, error: error.message };
-    }
-
-    return { data, error: null };
-  } catch (error) {
-    return { message: error };
-  }
-};
-
-export async function deleteReservation(idReserva) {
-  const supabase = createSupabaseFrontendClient();
-
-  try {
-    const response = await supabase
-      .from('reservas')
-      .delete()
-      .eq('id_reserva', idReserva);
-    return { response };
-  } catch (error) {
-    return { message: error };
-  }
-}
-
-export const getCountUsers = async () => {
-  const supabase = createSupabaseFrontendClient();
-  try {
-    const { count, error } = await supabase
-      .from('profiles')
-      .select('*', { count: 'exact', head: true });
-
-    if (error) {
-      return { data: null, error: error };
-    }
-
-    return { data: count, error: null };
-  } catch (error) {
-    return { message: error };
-  }
-};

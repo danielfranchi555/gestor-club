@@ -1,6 +1,6 @@
-import NavbarAdmin from '../ui/NavbarAdmin/NavbarAdmin';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
+import NavbarAdmin from '../ui/admin/NavbarAdmin/NavbarAdmin';
 
 const layout = ({ children }) => {
   return (

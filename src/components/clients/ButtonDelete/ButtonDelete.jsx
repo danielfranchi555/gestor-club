@@ -1,6 +1,6 @@
 'use client';
 
-import { deleteReservation } from '@/actions/users';
+import { deleteReservation } from '@/actions/ClientSide/reservation';
 
 const ButtonDelete = ({ idReserva }) => {
   return (

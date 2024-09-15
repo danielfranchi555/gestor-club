@@ -13,6 +13,8 @@ const Horarios = () => {
     horarios,
     pendingHorarios,
   } = useContext(ContextReservation);
+  const date = new Date();
+  console.log(date.getHours());
 
   const supabase = createSupabaseFrontendClient();
 
@@ -53,7 +55,7 @@ const Horarios = () => {
             <div key={hour.id}>
               <div
                 onClick={() => handleHour(hour.id, hour.horario_inicio)}
-                className={`text-sm flex justify-between gap-2 cursor-pointer py-2 rounded-md px-2 hover:shadow-xs ${selected.id && selected.id === hour.id ? 'bg-blue-700  text-white' : ''}`}
+                className={`{} text-sm flex justify-between gap-2 cursor-pointer py-2 rounded-md px-2 hover:shadow-xs ${selected.id && selected.id === hour.id ? 'bg-blue-700  text-white' : ''}`}
               >
                 <span>{hour.horario_inicio}</span>
                 <span>-</span>

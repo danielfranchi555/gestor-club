@@ -1,5 +1,4 @@
 'use client';
-import { createAccountAction } from '@/actions/users';
 import { Input } from '@/components/ui/input';
 // import { ToastAction } from '@/components/ui/toast';
 // import { useToast } from '@/components/ui/use-toast';
@@ -11,6 +10,7 @@ import { schemaSignUp } from '../schema';
 import Link from 'next/link';
 import { Label } from '@/components/ui/label';
 import { useRouter } from 'next/navigation';
+import { createAccountAction } from '@/actions/auth/actionsAuth';
 
 const page = () => {
   const [pending, setTransition] = useTransition();

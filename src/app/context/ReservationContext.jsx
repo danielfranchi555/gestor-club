@@ -1,5 +1,5 @@
 'use client';
-import { getUser } from '@/actions/users';
+import { getUser } from '@/actions/ClientSide/user';
 import { useToast } from '@/components/ui/use-toast';
 import { createSupabaseFrontendClient } from '@/utils/supabase/client';
 import { useParams } from 'next/navigation';
@@ -39,15 +39,17 @@ const ReservationContext = ({ children }) => {
   const getHorariosReservadosPorFecha = async () => {
     setTransitionHorarios(async () => {
       try {
-        // Obtener todos los horarios
+        const currentDate = new Date();
+        const formattedDate = currentDate.toISOString().split('T')[0];
+        const currentHour = currentDate.toTimeString().split(' ')[0]; // Hora actual en formato 'HH:MM:SS'
+
+        // Obtener todos los horarios posteriores a la hora actual
         const { data: horariosData, error: horariosError } = await supabase
           .from('horarios')
-          .select();
+          .select()
+          .gt('horario_inicio', currentHour); // Filtrar por horarios que no han pasado
 
         if (horariosError) throw new Error(horariosError.message);
-
-        // Formatear la fecha a 'YYYY-MM-DD'
-        const formattedDate = new Date(date).toISOString().split('T')[0];
 
         // Obtener las reservas para la fecha seleccionada
         const { data: reservasData, error: reservasError } = await supabase
@@ -58,13 +60,12 @@ const ReservationContext = ({ children }) => {
 
         if (reservasError) throw new Error(reservasError.message);
 
-        // Asegurarse de que horario_id solo contenga valores válidos
-
+        // Filtrar las reservas ya ocupadas
         const reservedIds = reservasData
           .map((reserva) => reserva.id_horario)
-          .filter((id) => id !== null && id !== ''); // Filtra IDs inválidos
+          .filter((id) => id !== null && id !== ''); // Filtrar IDs inválidos
 
-        // Filtrar los horarios no reservados en el frontend
+        // Filtrar los horarios que no están reservados
         const filteredHorarios = horariosData.filter(
           (horario) => !reservedIds.includes(horario.id),
         );

@@ -1,5 +1,4 @@
 'use client';
-import { loginAction } from '@/actions/users';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -9,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { schemaSignIn } from '../schema';
 import { useForm } from 'react-hook-form';
+import { loginAction } from '@/actions/auth/actionsAuth';
 
 const page = () => {
   const [pending, setTransition] = useTransition();

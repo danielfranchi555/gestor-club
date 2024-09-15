@@ -1,5 +1,6 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
+
 // Get Count Reservations
 export const getCountReservations = async () => {
   const cookieStore = cookies();

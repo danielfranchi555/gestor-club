@@ -1,5 +1,5 @@
+import { getCancha } from '@/actions/serverSide/data';
 import CanchaDetail from '@/app/ui/CanchaDetail/CanchaDetail';
-import { getCancha } from '@/actions/data';
 
 const page = async ({ params }) => {
   const id = params.id;

@@ -2,17 +2,17 @@
 import Link from 'next/link';
 import { useState, useTransition } from 'react';
 import { RxHamburgerMenu } from 'react-icons/rx';
-import logo from '../../../../public/logo-club.jpg';
+import logo from '../../../../../public/logo-club.jpg';
 import Image from 'next/image';
 import { FiHome } from 'react-icons/fi';
 import { CgNotes } from 'react-icons/cg';
 import { LuUsers } from 'react-icons/lu';
 import { GiTennisCourt } from 'react-icons/gi';
 import { GoSignOut } from 'react-icons/go';
-import { signOut } from '@/actions/users';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
-import ButtonTheme from '../ButtonTheme/ButtonTheme';
+import { signOut } from '@/actions/auth/actionsAuth';
+import ButtonTheme from '../../ButtonTheme/ButtonTheme';
 const NavbarAdmin = () => {
   const [open, setOpen] = useState(false);
   const [pending, setTransition] = useTransition();

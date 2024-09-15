@@ -1,4 +1,4 @@
-import { getCanchas } from '@/actions/data';
+import { getCanchas } from '@/actions/serverSide/data';
 import Card from '../ui/Card/Card';
 
 const page = async () => {

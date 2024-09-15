@@ -69,7 +69,7 @@ export const addCourt = async (data) => {
   }
 };
 
-// Edit Court
+// Update Court
 export const handleSubmitCourtEdit = async (data, id) => {
   try {
     let url = data.image; // Mantén la imagen existente si no hay una nueva

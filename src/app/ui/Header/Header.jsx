@@ -1,8 +1,8 @@
-import { getUser } from '@/actions/data';
 import Navbar from '../NavBar/Navbar';
 import Image from 'next/image';
 import logo from '../../../../public/logo-club.jpg';
 import Link from 'next/link';
+import { getUser } from '@/actions/serverSide/data';
 const Header = async () => {
   const { user, error } = await getUser();
   if (error) {
